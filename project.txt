@@ -1,4 +1,4 @@
-To Build — Ideas Pool PWA
+Ideas — Project Ideas Pool PWA (folder/repo/domain remain "to-build")
 
 Purpose:
 - Personal launcher for the pool of ideas captured in THE_FORGE.md

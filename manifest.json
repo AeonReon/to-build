@@ -1,7 +1,7 @@
 {
-  "name": "To Build",
-  "short_name": "To Build",
-  "description": "The pool of project ideas waiting to be built. Browse, dictate, pull one out.",
+  "name": "Ideas",
+  "short_name": "Ideas",
+  "description": "The pool of project ideas. Browse, dictate, spark fresh ones, pull one out to build.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

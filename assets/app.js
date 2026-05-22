@@ -1,4 +1,4 @@
-const APP_VERSION = 'v1';
+const APP_VERSION = 'v2';
 const USER_IDEAS_KEY = 'tobuild.user-ideas';
 
 // ---------- SVG icon library (drops into <svg viewBox="0 0 64 64">) ----------
@@ -207,7 +207,7 @@ function toast(msg) {
 function renderHomeLink() {
   const here = (location.pathname.split('/').pop() || 'index.html');
   if (here === 'index.html' || here === '') return;
-  document.body.insertAdjacentHTML('afterbegin', '<a href="index.html" class="home-link">← To Build</a>');
+  document.body.insertAdjacentHTML('afterbegin', '<a href="index.html" class="home-link">← Ideas</a>');
 }
 function renderVersionPill() {
   document.body.insertAdjacentHTML('beforeend', `<div class="version-pill">${APP_VERSION}</div>`);

@@ -1,6 +1,8 @@
-# To Build — Project Rules
+# Ideas — Project Rules
 
 A personal PWA listing every project idea waiting to be built. The pool sits in `/THE_FORGE.md` at the workspace root; this app is the friendly browse + add surface for it on the phone.
+
+Display name: **Ideas**. Folder, repo, and Vercel project remain `to-build` — domain is `to-build.vercel.app`.
 
 ## Voice and content
 
