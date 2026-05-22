@@ -20,7 +20,8 @@
 
     <div class="spark-actions">
       <button class="btn primary-fill" id="dig-btn">Dig deeper in chat</button>
-      <button class="btn" id="another-btn">Another spark</button>
+      <button class="btn" id="back-btn" hidden>← Back</button>
+      <button class="btn" id="another-btn">Another spark →</button>
       <button class="btn secondary" id="save-btn">Save to my pool</button>
     </div>
   </main>
@@ -41,7 +42,21 @@
     };
 
     let current = null;
+    const history = [];   // previously-shown sparks; newest at end
     const cardEl = document.getElementById('card');
+    const backBtn = document.getElementById('back-btn');
+
+    function paint(spark) {
+      current = spark;
+      const p = PALETTE[spark.c] || PALETTE.workflow;
+      cardEl.innerHTML = `
+        <div class="spark-card" style="--c:${p.color};--cd:${p.colorDeep};">
+          <div class="spark-card-eyebrow">${p.label}</div>
+          <div class="spark-card-name">${TB.escapeHtml(spark.n)}</div>
+          <p class="spark-card-body">${TB.escapeHtml(spark.b)}</p>
+        </div>`;
+      backBtn.hidden = history.length === 0;
+    }
 
     function roll() {
       const sparks = window.SPARKS;
@@ -49,17 +64,18 @@
       do {
         next = sparks[Math.floor(Math.random() * sparks.length)];
       } while (current && sparks.length > 1 && next.n === current.n);
-      current = next;
-      const p = PALETTE[next.c] || PALETTE.workflow;
-      cardEl.innerHTML = `
-        <div class="spark-card" style="--c:${p.color};--cd:${p.colorDeep};">
-          <div class="spark-card-eyebrow">${p.label}</div>
-          <div class="spark-card-name">${TB.escapeHtml(next.n)}</div>
-          <p class="spark-card-body">${TB.escapeHtml(next.b)}</p>
-        </div>`;
+      if (current) history.push(current);
+      paint(next);
+    }
+
+    function goBack() {
+      if (!history.length) return;
+      const prev = history.pop();
+      paint(prev);
     }
 
     document.getElementById('another-btn').addEventListener('click', roll);
+    backBtn.addEventListener('click', goBack);
 
     document.getElementById('dig-btn').addEventListener('click', () => {
       if (!current) return;
@@ -99,7 +115,11 @@
       document.body.removeChild(ta);
     }
 
-    roll();
+    // First spark — paint directly so it doesn't push a phantom onto history
+    (function init() {
+      const sparks = window.SPARKS;
+      paint(sparks[Math.floor(Math.random() * sparks.length)]);
+    })();
   </script>
 </body>
 </html>
