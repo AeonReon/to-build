@@ -1,4 +1,4 @@
-const APP_VERSION = 'v2';
+const APP_VERSION = 'v3';
 const USER_IDEAS_KEY = 'tobuild.user-ideas';
 
 // ---------- SVG icon library (drops into <svg viewBox="0 0 64 64">) ----------
