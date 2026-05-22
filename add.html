@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#FAF6EC">
+  <title>To Build — Brain-dump</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+  <main class="form-main">
+    <h1>Brain-dump a new idea</h1>
+    <p class="lede">First line becomes the title. Everything after is the body. Tap the microphone on your keyboard to dictate.</p>
+
+    <form id="dump-form">
+      <div class="field">
+        <label for="dump">The riff</label>
+        <textarea id="dump" placeholder="Talk or type. First line is the title.&#10;&#10;Then the riff — what is it, why it matters, what you&rsquo;d build first…" autofocus></textarea>
+        <div class="hint">Stays on this device until you copy and paste into a chat for promotion to the Forge.</div>
+      </div>
+
+      <div class="field">
+        <label for="category">Category</label>
+        <select id="category">
+          <option value="software">Software &amp; AI</option>
+          <option value="physical">Physical builds</option>
+          <option value="share">Share with community</option>
+        </select>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn primary-fill">Save to pool</button>
+        <a href="index.html" class="btn">Cancel</a>
+      </div>
+    </form>
+  </main>
+
+  <script src="assets/app.js"></script>
+  <script>
+    const PALETTE = {
+      software: { color: '#4f46e5', colorDeep: '#3730a3', icon: 'build' },
+      physical: { color: '#f59e0b', colorDeep: '#b45309', icon: 'build' },
+      share:    { color: '#16a34a', colorDeep: '#15803d', icon: 'build' }
+    };
+
+    document.getElementById('dump-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const text = document.getElementById('dump').value.trim();
+      const category = document.getElementById('category').value;
+      if (!text) { TB.toast('Type or dictate something first'); return; }
+
+      const lines = text.split('\n');
+      const name = lines[0].trim().replace(/^#+\s*/, '').slice(0, 120);
+      const rest = lines.slice(1).join('\n').trim();
+      const body = rest || name;
+      const firstSentence = (rest || name).split(/(?<=[.!?])\s+/)[0].slice(0, 180);
+
+      const palette = PALETTE[category] || PALETTE.software;
+      const idea = {
+        id: TB.uid(),
+        name,
+        hook: firstSentence,
+        category,
+        status: 'Captured — not yet sized',
+        captured: TB.isoToday(),
+        color: palette.color,
+        colorDeep: palette.colorDeep,
+        icon: palette.icon,
+        body
+      };
+      TB.addUserIdea(idea);
+      TB.toast('Saved to the pool');
+      setTimeout(() => { location.href = 'idea.html?id=' + encodeURIComponent(idea.id); }, 400);
+    });
+  </script>
+</body>
+</html>

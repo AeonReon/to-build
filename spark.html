@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#FAF6EC">
+  <title>To Build — Spark</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+  <main class="spark-main">
+    <div class="spark-eyebrow">Spark</div>
+    <h1>Fresh from the wider world</h1>
+    <p class="lede">A random pattern people are running. Re-roll until one feels alive. Dig deeper opens a Claude chat already framed up.</p>
+
+    <div id="card"></div>
+
+    <div class="spark-actions">
+      <button class="btn primary-fill" id="dig-btn">Dig deeper in chat</button>
+      <button class="btn" id="another-btn">Another spark</button>
+      <button class="btn secondary" id="save-btn">Save to my pool</button>
+    </div>
+  </main>
+
+  <script src="assets/sparks-data.js"></script>
+  <script src="assets/app.js"></script>
+  <script>
+    const PALETTE = {
+      workflow: { color: '#4f46e5', colorDeep: '#3730a3', label: 'Workflow people are running' },
+      stack:    { color: '#0d9488', colorDeep: '#115e59', label: 'Tool stack people are gluing' },
+      app:      { color: '#db2777', colorDeep: '#9d174d', label: 'App pattern worth knowing' },
+      hardware: { color: '#f59e0b', colorDeep: '#b45309', label: 'Hardware project' },
+      ai:       { color: '#0891b2', colorDeep: '#155e75', label: 'AI-era workflow' },
+      life:     { color: '#FF9F3D', colorDeep: '#C97D2A', label: 'Life-area prompt — to stimulate ideas' }
+    };
+
+    let current = null;
+    const cardEl = document.getElementById('card');
+
+    function roll() {
+      const sparks = window.SPARKS;
+      let next;
+      do {
+        next = sparks[Math.floor(Math.random() * sparks.length)];
+      } while (current && sparks.length > 1 && next.n === current.n);
+      current = next;
+      const p = PALETTE[next.c] || PALETTE.workflow;
+      cardEl.innerHTML = `
+        <div class="spark-card" style="--c:${p.color};--cd:${p.colorDeep};">
+          <div class="spark-card-eyebrow">${p.label}</div>
+          <div class="spark-card-name">${TB.escapeHtml(next.n)}</div>
+          <p class="spark-card-body">${TB.escapeHtml(next.b)}</p>
+        </div>`;
+    }
+
+    document.getElementById('another-btn').addEventListener('click', roll);
+
+    document.getElementById('dig-btn').addEventListener('click', () => {
+      if (!current) return;
+      const prompt = window.buildSparkPrompt(current);
+      const url = 'https://claude.ai/new?q=' + encodeURIComponent(prompt);
+      navigator.clipboard.writeText(prompt).then(
+        () => { TB.toast('Prompt copied. Opening Claude…'); setTimeout(() => window.open(url, '_blank'), 250); },
+        () => { fallbackCopy(prompt); window.open(url, '_blank'); }
+      );
+    });
+
+    document.getElementById('save-btn').addEventListener('click', () => {
+      if (!current) return;
+      const p = PALETTE[current.c] || PALETTE.workflow;
+      const labelMap = { workflow: 'software', stack: 'software', app: 'software', hardware: 'physical', ai: 'software', life: 'software' };
+      const idea = {
+        id: TB.uid(),
+        name: current.n,
+        hook: current.b.split(/(?<=[.!?])\s+/)[0].slice(0, 180),
+        category: labelMap[current.c] || 'software',
+        status: 'Spark — saved for later',
+        captured: TB.isoToday(),
+        color: p.color,
+        colorDeep: p.colorDeep,
+        icon: current.c === 'hardware' ? 'router' : (current.c === 'ai' ? 'robot' : 'build'),
+        body: current.b
+      };
+      TB.addUserIdea(idea);
+      TB.toast('Saved to your pool');
+    });
+
+    function fallbackCopy(text) {
+      const ta = document.createElement('textarea');
+      ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); TB.toast('Copied'); } catch {}
+      document.body.removeChild(ta);
+    }
+
+    roll();
+  </script>
+</body>
+</html>

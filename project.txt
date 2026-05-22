@@ -1,0 +1,24 @@
+To Build — Ideas Pool PWA
+
+Purpose:
+- Personal launcher for the pool of ideas captured in THE_FORGE.md
+- Browse on phone when time + tokens are free and nothing else is obvious
+- Brain-dump new ideas straight into the app (iOS dictation friendly)
+- Pull a card out and build it
+
+Stack:
+- Static HTML / CSS / vanilla JS, PWA, localStorage
+- Mirrors design vocabulary of APPS/CHILDREN/new-beginnings and APPS/classical-mind
+  (warm cream background, gradient-outline tiles, system sans heavy weights)
+
+Data:
+- Seed data lives in assets/ideas-data.js — hand-derived from /THE_FORGE.md
+- User-added entries live in localStorage under 'tobuild.user-ideas' and merge over the seed
+- New chat-side ideas go in THE_FORGE.md as before; this app re-syncs seed at build time
+
+Deploy:
+- GitHub: AeonReon/to-build
+- Vercel: aeonreon team, static deploy
+- Live URL: TBD (added once Vercel project is created)
+
+API keys: none.

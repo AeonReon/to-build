@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#FAF6EC">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="To Build">
+  <title>To Build — The ideas pool</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body class="launcher">
+
+  <header class="launcher-hero">
+    <div class="hero-wrap">
+      <div class="hero-brand">
+        <img src="icon-192.png" alt="" class="brand-icon" onerror="this.style.display='none'">
+        <div>
+          <h1>To Build</h1>
+          <p class="hero-lede">The pool of ideas waiting for a quiet day. Pull one out. Brain-dump a new one. Spark a fresh one.</p>
+        </div>
+      </div>
+      <div class="count-pill" id="count-pill">… ideas</div>
+    </div>
+  </header>
+
+  <main class="launcher-main">
+
+    <div class="action-row">
+      <a href="add.html" class="action-tile" style="--c:#FFD64A;--cd:#C97D2A;">
+        <span class="action-icon"><svg viewBox="0 0 64 64" class="tile-icon" id="add-icon"></svg></span>
+        <span class="action-body">
+          <span class="action-name">Brain-dump a new idea</span>
+          <span class="action-tagline">Talk into the textarea. iOS dictation works.</span>
+        </span>
+      </a>
+      <a href="spark.html" class="action-tile" style="--c:#FF5E8E;--cd:#7c3aed;">
+        <span class="action-icon"><svg viewBox="0 0 64 64" class="tile-icon" id="spark-icon"></svg></span>
+        <span class="action-body">
+          <span class="action-name">Spark a new idea</span>
+          <span class="action-tagline">Pull a fresh pattern from the wider world.</span>
+        </span>
+      </a>
+    </div>
+
+    <div id="sections"></div>
+
+  </main>
+
+  <footer class="launcher-footer">
+    Capture the seed before it&rsquo;s lost. Most won&rsquo;t get built. The point is the pool.
+  </footer>
+
+  <script src="assets/ideas-data.js"></script>
+  <script src="assets/app.js"></script>
+  <script>
+    // Inject action-tile icons
+    document.getElementById('add-icon').innerHTML = TB.ICONS.plus;
+    document.getElementById('spark-icon').innerHTML = TB.ICONS.spark;
+
+    // Group ideas by category
+    const user = TB.loadUserIdeas();
+    const seed = window.IDEAS || [];
+    const all = [...user, ...seed];
+    document.getElementById('count-pill').textContent = `${all.length} ideas in the pool`;
+
+    const userTiles = user;
+    const grouped = {};
+    for (const cat of window.CATEGORIES) grouped[cat.id] = [];
+    for (const idea of seed) {
+      if (grouped[idea.category]) grouped[idea.category].push(idea);
+    }
+
+    function renderTile(idea) {
+      const isUser = !window.IDEAS.find(s => s.id === idea.id);
+      return `
+        <a href="idea.html?id=${encodeURIComponent(idea.id)}" class="tile" style="--c:${idea.color};--cd:${idea.colorDeep};">
+          ${isUser ? '<span class="tile-badge">Yours</span>' : ''}
+          <div class="tile-icon-wrap">${TB.tileIconSVG(idea.icon)}</div>
+          <div class="tile-body">
+            <div class="tile-name">${TB.escapeHtml(idea.name)}</div>
+            <div class="tile-tagline">${TB.escapeHtml(idea.hook)}</div>
+            ${idea.status ? `<div class="tile-status">${TB.escapeHtml(idea.status)}</div>` : ''}
+          </div>
+        </a>`;
+    }
+
+    const sectionsEl = document.getElementById('sections');
+    let html = '';
+
+    if (userTiles.length) {
+      html += `
+        <section class="tile-section">
+          <h2 class="tile-section-title">Your brain-dumps</h2>
+          <p class="tile-section-sub">Captured straight into the app. Local to this device.</p>
+          <div class="tile-grid">${userTiles.map(renderTile).join('')}</div>
+        </section>`;
+    }
+
+    for (const cat of window.CATEGORIES) {
+      const list = grouped[cat.id];
+      if (!list.length) continue;
+      html += `
+        <section class="tile-section">
+          <h2 class="tile-section-title">${TB.escapeHtml(cat.name)}</h2>
+          <p class="tile-section-sub">${TB.escapeHtml(cat.sub)}</p>
+          <div class="tile-grid">${list.map(renderTile).join('')}</div>
+        </section>`;
+    }
+
+    if (!all.length) {
+      html = `<div class="empty">No ideas yet. Tap <strong>Brain-dump a new idea</strong> or <strong>Spark a new idea</strong> to start the pool.</div>`;
+    }
+
+    sectionsEl.innerHTML = html;
+  </script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#FAF6EC">
+  <title>To Build — Idea</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body class="detail-page">
+
+  <main class="detail-main">
+    <div id="content"></div>
+  </main>
+
+  <script src="assets/ideas-data.js"></script>
+  <script src="assets/app.js"></script>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const id = params.get('id');
+    const idea = id ? TB.findIdea(id) : null;
+    const content = document.getElementById('content');
+
+    if (!idea) {
+      content.innerHTML = `
+        <div class="detail-hero">
+          <h1>Idea not found</h1>
+          <p class="detail-hook">This entry isn&rsquo;t in the seed file or your local pool.</p>
+          <div class="detail-actions">
+            <a class="btn primary-fill" href="index.html">Back to the pool</a>
+          </div>
+        </div>`;
+    } else {
+      document.documentElement.style.setProperty('--d-color', idea.color);
+      document.documentElement.style.setProperty('--d-deep', idea.colorDeep);
+      document.documentElement.style.setProperty('--d-soft', idea.color + '33');
+
+      const eyebrow = idea._seed
+        ? (window.CATEGORIES.find(c => c.id === idea.category)?.name || 'Idea')
+        : 'Your brain-dump';
+
+      content.innerHTML = `
+        <div class="detail-hero">
+          <div class="detail-eyebrow">${TB.escapeHtml(eyebrow)}</div>
+          <h1>${TB.escapeHtml(idea.name)}</h1>
+          <p class="detail-hook">${TB.escapeHtml(idea.hook)}</p>
+          <div class="detail-meta">
+            ${idea.status ? `<span class="detail-status-pill">${TB.escapeHtml(idea.status)}</span>` : ''}
+            ${idea.captured ? `<span class="detail-date-pill">Captured ${TB.escapeHtml(TB.fmtDate(idea.captured))}</span>` : ''}
+          </div>
+        </div>
+        <article class="detail-body">${TB.bodyToHTML(idea.body)}</article>
+        <div class="detail-actions">
+          <button class="btn primary-fill" id="dig-btn">Dig deeper in chat</button>
+          <button class="btn" id="copy-btn">Copy as markdown</button>
+          ${idea._seed ? '' : '<button class="btn danger" id="del-btn">Delete</button>'}
+        </div>`;
+
+      document.getElementById('dig-btn').addEventListener('click', () => {
+        const prompt = `I want to build "${idea.name}" from my To Build pool.\n\nHook: ${idea.hook}\n\n${idea.body}\n\nLet's start. Walk me through the first session — what to confirm, what to set up, what to ship before we close the chat.`;
+        copyAndOpenClaude(prompt);
+      });
+      document.getElementById('copy-btn').addEventListener('click', () => {
+        const md = `## ${idea.name}\n\n*${idea.hook}*\n\n${idea.body}\n\nCaptured: ${idea.captured || TB.isoToday()}\n`;
+        navigator.clipboard.writeText(md).then(
+          () => TB.toast('Markdown copied — paste it into a chat'),
+          () => fallbackCopy(md)
+        );
+      });
+      const delBtn = document.getElementById('del-btn');
+      if (delBtn) {
+        delBtn.addEventListener('click', () => {
+          if (!confirm('Delete this brain-dump? This only removes it from this device.')) return;
+          TB.deleteUserIdea(idea.id);
+          location.href = 'index.html';
+        });
+      }
+    }
+
+    function copyAndOpenClaude(prompt) {
+      const url = 'https://claude.ai/new?q=' + encodeURIComponent(prompt);
+      navigator.clipboard.writeText(prompt).then(
+        () => { TB.toast('Prompt copied. Opening Claude…'); setTimeout(() => window.open(url, '_blank'), 250); },
+        () => { fallbackCopy(prompt); window.open(url, '_blank'); }
+      );
+    }
+    function fallbackCopy(text) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); TB.toast('Copied'); } catch {}
+      document.body.removeChild(ta);
+    }
+  </script>
+</body>
+</html>
