@@ -7,6 +7,27 @@ window.IDEAS = [
   // ---------- Software & AI ----------
 
   {
+    id: 'car-brain-claude-rc',
+    name: 'Car brain — Claude RC for driving (multi-session + radio)',
+    hook: 'Talk to Claude across many projects from the car, hear a driving-safe summary back. Replace the car radio with our own content.',
+    category: 'software',
+    status: 'Multi-wave',
+    captured: '2026-05-23',
+    color: '#0ea5e9',
+    colorDeep: '#0369a1',
+    icon: 'headphones',
+    body: [
+      "The riff: the existing claude-remote PWA (claude-rc, at localhost:5080, pending claude.aiprofits.cc tunnel) already does voice in → claude CLI → voice out, with Flow mode wired for Bluetooth steering-wheel buttons. It's one session at a time though — fine at the desk, wrong shape for the car. While driving, ideas land for ten different projects in a row, and stopping to read a long Claude Code reply isn't an option. We want: speak once, hit the right project session, hear a 1–3 sentence driving summary, move on.",
+      "Wave 1 — Multi-session dispatcher inside Claude RC. Add a \"dispatcher\" layer on top of claude-remote that holds a roster of project sessions (one per active idea — count-to-twenty, hero-tales, traffic-flow, book drafts, etc.). Each voice turn first hits a small routing model (LM Studio locally, or claude -p with a tight system prompt) that decides: which session does this belong in, or is this a brand-new thread. Forward the turn to that session's `claude --resume <id>`. When the reply comes back, second pass: claude -p \"summarise this in 1–3 sentences for a driver, no code, no markdown\" → TTS that to the earpiece. The full reply stays in claude-remote history for later reading at the desk. UI changes are small — a session badge in the banner showing which project this turn landed in, plus a \"wrong project, try X\" voice intent so misroutes self-correct.",
+      "Wave 2 — Safe over-the-internet exposure. claude-rc is currently local-only because Code mode is genuinely powerful and the PIN gate alone isn't enough for an unrestricted internet endpoint. Hardening pass before we drive with it: (a) finish the Cloudflare ingress to claude.aiprofits.cc with Cloudflare Access in front (one-tap email magic-link from approved email only, no public form), (b) rate-limit + device-pairing token (first auth on a device requires both the PIN and a one-time code printed locally at the Mac mini; subsequent visits use a long-lived signed cookie), (c) \"driving profile\" that disables Code mode entirely — only chat + session-resume + dispatcher are allowed when accessed from the car device. This way Claude can talk and think but can't `rm` anything by accident while we're at 60.",
+      "Wave 3 — Car hardware. The Jeep Renegade gets a dedicated brain. Easiest path: a phone (Android preferred for openness, iPhone usable too) dock-mounted, USB-C to the head unit for audio + power, Bluetooth pairing for steering-wheel media buttons (already supported by Flow mode's MediaSession handlers). Phone runs claude-rc as installed PWA in Driving Profile, talks to the Mac mini at home over Cloudflare tunnel. No new app needed for v1 — same PWA, just an \"is-in-car\" flag in localStorage that locks the profile + always-on Flow. Phase 2 considers a small dedicated Android tablet bolted in the dash that lives in the car (cheaper than a Pixel, can be on its own SIM or just paired with the user's phone hotspot). Wired mic upgrade considered if Bluetooth voice quality is the bottleneck.",
+      "Wave 4 — In-car radio (content launcher). The realisation: ordinary radio is awful when we have Hero Tales, talk-to-a-book, the e-reader, the affirmations app, and Kokoro voices all already running. Add a \"radio\" verb to the dispatcher: \"play Hero Tales\", \"read me the book I was on yesterday\", \"give me an affirmations set\", \"play the recipe I saved\", \"queue last night's transcribe-studio recap\". Each one resolves to an existing app + asset and pipes audio through the same TTS chain, with skip/back/pause on the steering wheel. The radio acts as a content launcher voice-side, not a new app — it just calls the apps we already have.",
+      "Honest watch-outs: dispatcher misrouting is the failure mode that kills usefulness — needs a clear \"wrong project\" voice intent + confirmation banner. Cloudflare Access is the single most important security layer; without it, exposing claude-rc to the internet is the wrong move regardless of PIN strength. Driving Profile must be hard-gated server-side, not just a client toggle. Phone-in-cradle thermals matter (M-series mini stays cool, the phone in summer sun is the weak link). Voice latency target is sub-3-seconds from \"done speaking\" to \"summary starts\" — the summarisation pass adds time, so the summariser should ideally be the local LM Studio model rather than a network round-trip to Claude.",
+      "Sequencing: Wave 1 first — purely software on top of an app that exists, can be tested at the desk before the car ever gets involved. Wave 2 is the gating step before any in-car use. Wave 3 + 4 stack on top once 1 and 2 are solid."
+    ].join('\n\n')
+  },
+
+  {
     id: 'claude-mac-mini-operator',
     name: 'Claude as autonomous Mac mini operator',
     hook: 'A persistent agent on the always-on Mac mini that drives Chrome, email, SMS, and our existing apps. Hands-off operation for the boring stuff.',
