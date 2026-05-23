@@ -18,11 +18,14 @@
 
     <div id="card"></div>
 
+    <div class="spark-back-row">
+      <button class="spark-back-link" id="back-btn" hidden>← Previous spark</button>
+    </div>
+
     <div class="spark-actions">
       <button class="btn primary-fill" id="dig-btn">Dig deeper in chat</button>
-      <button class="btn" id="back-btn" hidden>← Back</button>
-      <button class="btn" id="another-btn">Another spark →</button>
       <button class="btn secondary" id="save-btn">Save to my pool</button>
+      <button class="btn" id="another-btn">Another spark →</button>
     </div>
   </main>
 
@@ -30,15 +33,12 @@
   <script src="assets/app.js"></script>
   <script>
     const PALETTE = {
-      workflow:  { color: '#4f46e5', colorDeep: '#3730a3', label: 'Workflow people are running' },
-      stack:     { color: '#0d9488', colorDeep: '#115e59', label: 'Tool stack people are gluing' },
-      app:       { color: '#db2777', colorDeep: '#9d174d', label: 'App pattern worth knowing' },
-      hardware:  { color: '#f59e0b', colorDeep: '#b45309', label: 'Hardware project' },
-      ai:        { color: '#0891b2', colorDeep: '#155e75', label: 'AI-era workflow' },
-      business:  { color: '#16a34a', colorDeep: '#15803d', label: 'Small-bet / business pattern' },
-      content:   { color: '#7c3aed', colorDeep: '#5b21b6', label: 'Content / creator pattern' },
-      community: { color: '#e11d48', colorDeep: '#9f1239', label: 'Community / connection pattern' },
-      life:      { color: '#FF9F3D', colorDeep: '#C97D2A', label: 'Life-area prompt — to stimulate ideas' }
+      hardware: { color: '#f59e0b', colorDeep: '#b45309', label: 'Hardware engineering project' },
+      ai:       { color: '#0891b2', colorDeep: '#155e75', label: 'Local-AI build' },
+      workflow: { color: '#4f46e5', colorDeep: '#3730a3', label: 'Programmable workflow' },
+      app:      { color: '#db2777', colorDeep: '#9d174d', label: 'PWA / app to build' },
+      stack:    { color: '#0d9488', colorDeep: '#115e59', label: 'Custom self-host build' },
+      life:     { color: '#FF9F3D', colorDeep: '#C97D2A', label: 'Question that points at a build' }
     };
 
     let current = null;
@@ -90,7 +90,7 @@
     document.getElementById('save-btn').addEventListener('click', () => {
       if (!current) return;
       const p = PALETTE[current.c] || PALETTE.workflow;
-      const labelMap = { workflow: 'software', stack: 'software', app: 'software', hardware: 'physical', ai: 'software', business: 'software', content: 'software', community: 'software', life: 'software' };
+      const labelMap = { workflow: 'software', stack: 'software', app: 'software', hardware: 'physical', ai: 'software', life: 'software' };
       const idea = {
         id: TB.uid(),
         name: current.n,

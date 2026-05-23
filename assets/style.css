@@ -628,6 +628,34 @@ button.danger::before, .btn.danger::before { background: linear-gradient(135deg,
   flex-wrap: wrap;
 }
 
+/* Subtle back link — only when history exists. Lives above the main row. */
+.spark-back-row {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0.6em;
+  min-height: 1.6em;
+}
+.spark-back-link {
+  appearance: none;
+  background: transparent;
+  color: var(--ink-mute);
+  font-family: var(--sans);
+  font-size: 0.82em;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  padding: 0.35em 0.9em;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  transition: color 0.15s ease, background 0.15s ease, transform 0.12s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+}
+.spark-back-link::before { display: none; }
+.spark-back-link:hover { color: var(--ink); background: rgba(0,0,0,0.05); }
+.spark-back-link:active { transform: scale(0.96); }
+
 .toast {
   position: fixed;
   bottom: calc(2em + env(safe-area-inset-bottom, 0px));
