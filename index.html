@@ -64,7 +64,8 @@
 
     // Group ideas by category
     const user = TB.loadUserIdeas();
-    const seed = window.IDEAS || [];
+    const hidden = new Set(TB.loadHiddenSeeds());
+    const seed = (window.IDEAS || []).filter(i => !hidden.has(i.id));
     const all = [...user, ...seed];
     document.getElementById('count-pill').textContent = `${all.length} ideas in the pool`;
 

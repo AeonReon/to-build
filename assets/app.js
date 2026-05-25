@@ -1,5 +1,7 @@
-const APP_VERSION = 'v5';
+const APP_VERSION = 'v6';
 const USER_IDEAS_KEY = 'tobuild.user-ideas';
+const HIDDEN_SEEDS_KEY = 'tobuild.hidden-seeds';
+const SAVED_SPARKS_KEY = 'tobuild.saved-sparks';
 
 // ---------- SVG icon library (drops into <svg viewBox="0 0 64 64">) ----------
 
@@ -151,6 +153,36 @@ function addUserIdea(idea) {
 function deleteUserIdea(id) {
   saveUserIdeas(loadUserIdeas().filter(i => i.id !== id));
 }
+
+function loadHiddenSeeds() {
+  try {
+    const raw = localStorage.getItem(HIDDEN_SEEDS_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch { return []; }
+}
+function hideSeedIdea(id) {
+  const set = new Set(loadHiddenSeeds());
+  set.add(id);
+  try { localStorage.setItem(HIDDEN_SEEDS_KEY, JSON.stringify([...set])); } catch {}
+}
+function isSeedHidden(id) {
+  return loadHiddenSeeds().includes(id);
+}
+
+function loadSavedSparks() {
+  try {
+    const raw = localStorage.getItem(SAVED_SPARKS_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch { return []; }
+}
+function markSparkSaved(name) {
+  const set = new Set(loadSavedSparks());
+  set.add(name);
+  try { localStorage.setItem(SAVED_SPARKS_KEY, JSON.stringify([...set])); } catch {}
+}
+function isSparkSaved(name) {
+  return loadSavedSparks().includes(name);
+}
 function findIdea(id) {
   const seed = (window.IDEAS || []).find(i => i.id === id);
   if (seed) return { ...seed, _seed: true };
@@ -224,4 +256,4 @@ document.addEventListener('DOMContentLoaded', () => {
   registerSW();
 });
 
-window.TB = { ICONS, loadUserIdeas, saveUserIdeas, addUserIdea, deleteUserIdea, findIdea, allIdeas, uid, isoToday, fmtDate, tileIconSVG, escapeHtml, bodyToHTML, toast };
+window.TB = { ICONS, loadUserIdeas, saveUserIdeas, addUserIdea, deleteUserIdea, loadHiddenSeeds, hideSeedIdea, isSeedHidden, loadSavedSparks, markSparkSaved, isSparkSaved, findIdea, allIdeas, uid, isoToday, fmtDate, tileIconSVG, escapeHtml, bodyToHTML, toast };

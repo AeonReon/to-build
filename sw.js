@@ -1,16 +1,18 @@
-const CACHE = 'ideas-v6';
+const CACHE = 'ideas-v7';
 const ASSETS = [
   './',
   './index.html',
   './idea.html',
   './add.html',
+  './spark.html',
   './manifest.json',
   './icon-192.png',
   './icon-512.png',
   './apple-touch-icon.png',
   './assets/style.css',
   './assets/app.js',
-  './assets/ideas-data.js'
+  './assets/ideas-data.js',
+  './assets/sparks-data.js'
 ];
 
 self.addEventListener('install', (e) => {

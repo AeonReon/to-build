@@ -55,7 +55,9 @@
         <div class="detail-actions">
           <button class="btn primary-fill" id="dig-btn">Dig deeper in chat</button>
           <button class="btn" id="copy-btn">Copy as markdown</button>
-          ${idea._seed ? '' : '<button class="btn danger" id="del-btn">Delete</button>'}
+          ${idea._seed
+            ? '<button class="btn danger" id="built-btn">Built — hide from pool</button>'
+            : '<button class="btn danger" id="del-btn">Delete</button>'}
         </div>`;
 
       document.getElementById('dig-btn').addEventListener('click', () => {
@@ -74,6 +76,14 @@
         delBtn.addEventListener('click', () => {
           if (!confirm('Delete this brain-dump? This only removes it from this device.')) return;
           TB.deleteUserIdea(idea.id);
+          location.href = 'index.html';
+        });
+      }
+      const builtBtn = document.getElementById('built-btn');
+      if (builtBtn) {
+        builtBtn.addEventListener('click', () => {
+          if (!confirm('Hide this idea from the pool? You’ve built it — it goes off the homepage. Local to this device.')) return;
+          TB.hideSeedIdea(idea.id);
           location.href = 'index.html';
         });
       }

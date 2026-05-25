@@ -45,9 +45,28 @@
     const history = [];   // previously-shown sparks; newest at end
     const cardEl = document.getElementById('card');
     const backBtn = document.getElementById('back-btn');
+    const saveBtn = document.getElementById('save-btn');
+    const digBtn = document.getElementById('dig-btn');
+    const anotherBtn = document.getElementById('another-btn');
+
+    function availableSparks() {
+      return window.SPARKS.filter(s => !TB.isSparkSaved(s.n));
+    }
 
     function paint(spark) {
       current = spark;
+      if (!spark) {
+        cardEl.innerHTML = `
+          <div class="spark-empty">
+            <h2>You’ve saved every spark to your pool</h2>
+            <p>The deck is empty for now. New batches land in the seed file when fresh research drops.</p>
+          </div>`;
+        saveBtn.hidden = true;
+        digBtn.hidden = true;
+        anotherBtn.hidden = true;
+        backBtn.hidden = history.length === 0;
+        return;
+      }
       const p = PALETTE[spark.c] || PALETTE.workflow;
       cardEl.innerHTML = `
         <div class="spark-card" style="--c:${p.color};--cd:${p.colorDeep};">
@@ -55,11 +74,15 @@
           <div class="spark-card-name">${TB.escapeHtml(spark.n)}</div>
           <p class="spark-card-body">${TB.escapeHtml(spark.b)}</p>
         </div>`;
+      saveBtn.hidden = false;
+      digBtn.hidden = false;
+      anotherBtn.hidden = false;
       backBtn.hidden = history.length === 0;
     }
 
     function roll() {
-      const sparks = window.SPARKS;
+      const sparks = availableSparks();
+      if (!sparks.length) { if (current) history.push(current); paint(null); return; }
       let next;
       do {
         next = sparks[Math.floor(Math.random() * sparks.length)];
@@ -74,10 +97,10 @@
       paint(prev);
     }
 
-    document.getElementById('another-btn').addEventListener('click', roll);
+    anotherBtn.addEventListener('click', roll);
     backBtn.addEventListener('click', goBack);
 
-    document.getElementById('dig-btn').addEventListener('click', () => {
+    digBtn.addEventListener('click', () => {
       if (!current) return;
       const prompt = window.buildSparkPrompt(current);
       const url = 'https://claude.ai/new?q=' + encodeURIComponent(prompt);
@@ -87,7 +110,7 @@
       );
     });
 
-    document.getElementById('save-btn').addEventListener('click', () => {
+    saveBtn.addEventListener('click', () => {
       if (!current) return;
       const p = PALETTE[current.c] || PALETTE.workflow;
       const labelMap = { workflow: 'software', stack: 'software', app: 'software', hardware: 'physical', ai: 'software', life: 'software' };
@@ -104,7 +127,9 @@
         body: current.b
       };
       TB.addUserIdea(idea);
-      TB.toast('Saved to your pool');
+      TB.markSparkSaved(current.n);
+      TB.toast('Saved to your pool — next spark…');
+      setTimeout(roll, 500);
     });
 
     function fallbackCopy(text) {
@@ -117,7 +142,8 @@
 
     // First spark — paint directly so it doesn't push a phantom onto history
     (function init() {
-      const sparks = window.SPARKS;
+      const sparks = availableSparks();
+      if (!sparks.length) { paint(null); return; }
       paint(sparks[Math.floor(Math.random() * sparks.length)]);
     })();
   </script>
