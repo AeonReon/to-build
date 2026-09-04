@@ -378,6 +378,69 @@ window.SPARKS = [
   { c: 'life', n: 'What would you let run while you sleep?', b: 'And more usefully — what would you never let run unsupervised, and why? The answer is the specification for your approval queue. Write both lists before building any of it.' },
   { c: 'life', n: 'Which of your apps cannot be spoken to?', b: 'You have a hundred small tools and most of them need a screen and two hands. Pick the one you most often need while driving, cooking or walking, and give it a voice route. Not a rewrite — a second door.' },
   { c: 'life', n: 'Where are you still the bottleneck on purpose?', b: 'Some of it is judgement you should keep. Some is habit. Separate the two on paper, and only then automate. The point is not fewer decisions — it is that the decisions left are the ones worth making.' },
+
+  // ================================================================
+  // September 2026, batch two — what people are actually posting about
+  // doing right now: cheap arms you can genuinely build (LeRobot,
+  // SO-ARM101, Moss v1 at about $150 for a pair, no 3D printer needed),
+  // shareable Claude skills (a markdown file plus a couple of scripts),
+  // the ESP32-S3 voice-frontend wave, colour e-ink finally being good
+  // enough, and the self-hosted stack settling on Ollama + open-webui
+  // with Whisper in and Piper out, nothing leaving the house.
+  // ================================================================
+
+  // ---------- robot ----------
+  { c: 'robot', n: 'SO-ARM101 — a real robot arm on the desk', b: 'The open arm the LeRobot community settled on. Hobby servos, printed parts, a Python interface that treats it like any other device. Around £200 for one arm and it does genuine pick-and-place. The first robot in the house that is not a toy, and every part of it is documented.' },
+  { c: 'robot', n: 'Moss v1 — two arms, no 3D printer', b: 'The newer low-cost design brings a pair of arms to roughly $150 and removes the printing step entirely, which was the thing stopping most people. Two arms means handing an object from one to the other, which is where robotics stops being a demo. Order the parts, spend a Saturday.' },
+  { c: 'robot', n: 'Teach the arm by leading it', b: 'The technique that makes cheap arms useful: you physically move the arm through the task while it records, then it repeats the motion. No inverse kinematics maths, no waypoints typed in. Record ten demonstrations of one household job and you have a working behaviour.' },
+  { c: 'robot', n: 'Train a policy on your own recorded task', b: 'LeRobot lets you record a dataset of your own demonstrations and train a small policy on it, then run it back on the real arm. Pick one narrow job — sorting two colours of block, stacking cups — and go the whole way from recording to a robot doing it. That loop is the whole field in miniature.' },
+  { c: 'robot', n: 'The arm that puts the Lego away', b: 'One job, defined narrowly enough to actually finish: a camera looks at the mat, the arm picks Lego pieces and drops them in the box. It will be slower than a child. It will also be the most convincing thing you have ever built for a seven-year-old.' },
+  { c: 'robot', n: 'Vision model plus arm — "pick up the red one"', b: 'A small vision model turns a spoken request into coordinates, and the arm goes there. This is the bit that felt like science fiction two years ago and is now a weekend of gluing two open things together. Start with coloured blocks, then try real objects.' },
+  { c: 'robot', n: 'A bench assistant that hands you parts', b: 'The arm sits at the end of the workbench with the component trays. You say "the 220 ohm ones" and it brings the tray forward. Genuinely useful, narrow enough to finish, and it makes the workshop feel like a workshop from a film.' },
+  { c: 'robot', n: 'A rover that maps the house', b: 'A small wheeled robot with a cheap lidar or just bump sensors, driving the floor and building its own map over a week. You write the mapping, the storage and the viewer. The output is a floor plan of your own house that you made rather than measured.' },
+  { c: 'robot', n: 'Garden rover on a schedule', b: 'An obstacle-avoiding rover that leaves the shed once a day, drives a loop of the garden, photographs the beds and comes home. You write the route, the safety stop and the photo log. Over a season it becomes a growth timelapse from ground level.' },
+  { c: 'robot', n: 'Something that only moves when it sees a fox', b: 'A camera, a local vision model and one moving part. It ignores cats, ignores wind, and does its one thing when a fox appears. The interesting engineering is entirely in "how do I stop it firing at nothing", which is the honest lesson of every detector.' },
+  { c: 'robot', n: 'Pan-tilt camera that follows the play', b: 'Two servos, a camera and a tracking loop, pointed at the room where the children play. It keeps them in frame while you cook. Recording stays local. The tracking code is the project; the parts cost about £30.' },
+  { c: 'robot', n: 'A robot that plays a board game', b: 'Snakes and ladders or noughts and crosses, with the arm moving the pieces and a camera reading the board. The child plays against a machine that physically reaches across the table, which lands very differently from a screen. Rules engine, vision, motion — three small problems.' },
+  { c: 'robot', n: 'Small quadruped, your own gait', b: 'A cheap twelve-servo walking kit where the mechanics are solved and the walking is not. You write the gait — the leg timing, the balance, the turn. It is the most satisfying maths in hobby robotics, and it either walks or it does not.' },
+  { c: 'robot', n: 'Rail robot for the greenhouse', b: 'A carriage on a length of rail with a camera and a water line. It runs the length of the greenhouse, photographs each plant in the same position every day, and waters what needs it. Simpler than a rover because the track removes the navigation problem entirely.' },
+
+  // ---------- hardware ----------
+  { c: 'hardware', n: 'Shake-for-a-fortune e-ink cookie', b: 'A 1.5" e-ink screen, an ESP32-S3, an accelerometer and a battery in a small printed shell. Shake it, a new line appears, it sleeps for a week. Fill it with three thousand of your own lines rather than fortune-cookie clichés — encouragements for a child, or the family in-jokes.' },
+  { c: 'hardware', n: 'Colour e-ink picture frame', b: 'Colour e-paper finally looks good enough for a frame you would hang. A family photo or a piece of art, changing once a day, no glow, no cable draped down the wall. You write the picker, the crop-for-panel step and the palette conversion, which is the part that decides whether it looks good.' },
+  { c: 'hardware', n: 'ESP32-S3 voice front-end', b: 'The pattern that took over the maker forums this year: the little board does nothing clever — microphone in, speaker out, wake word — and the thinking happens on a machine you already own. £15 of hardware per room, one brain on the Mac mini. That is how you get voice in the kitchen, the shed and the car.' },
+  { c: 'hardware', n: 'Put the assistant inside a toy', b: 'Somebody put one inside a novelty singing fish, with the head and tail moving as it spoke, and it was better than any smart speaker. The lesson is real: a voice coming out of a face gets talked to. Pick a toy that already moves, and give it the local voice stack.' },
+  { c: 'hardware', n: 'A wake-word toy for a child\'s room', b: 'Same idea, aimed at one person. A soft toy that answers questions with your rules in the prompt, your voice on the output, and no internet. The hard parts are the wake word and knowing when to stay quiet — both worth solving properly.' },
+  { c: 'hardware', n: 'Colour e-ink family console', b: 'A colour e-paper tablet on the kitchen wall: today, who is where, what is for dinner, the one thing that needs doing. Refreshes a few times a day, runs for weeks. The design constraint of a slow screen forces you to decide what actually matters.' },
+  { c: 'hardware', n: 'Printed things the children design', b: 'Not a printer project — a pipeline project. They describe a thing, it becomes a model, it prints overnight, they hold it at breakfast. Name tags, zip pulls, articulated animals, a marble run. You build the queue, the safety check and the "did it work" photo log.' },
+  { c: 'hardware', n: 'Camera feed into a local detector', b: 'Point a camera at the drive and run detection on your own hardware — not "person detected" but the specific things you care about: a parcel left, a gate open, the bin still out. You choose the classes and label the data yourself, which is a weekend and teaches you more than any tutorial.' },
+  { c: 'hardware', n: 'Watch the electricity, act on it', b: 'A clamp on the incoming supply, logged every second, with a small model looking for patterns. Which appliance is that. What costs the most. What is drawing power at 3am that should not be. The build is cheap; the surprise is guaranteed.' },
+  { c: 'hardware', n: 'One brain, many ears', b: 'Instead of a smart speaker per room, put a cheap microphone board in each room and run one recogniser centrally, so the house knows which room you spoke in. You write the audio routing, the room resolution and the "only the nearest one answers" rule.' },
+
+  // ---------- agent ----------
+  { c: 'agent', n: 'A skill is a markdown file and two scripts', b: 'That is the whole design, and it is why skills spread faster than anything else this year. Pick the thing you explain to Claude most often — your voice rules, your deploy steps, your image standard — and make it a folder. Then it works in every session without you saying it again.' },
+  { c: 'agent', n: 'A skill that makes your documents', b: 'The document skills work by writing real files with real scripts — docx, xlsx, pptx, pdf. Build the one for your own outputs: the book manuscript in the right format, the client proposal on your template, the printable worksheet for a child. Once written, "make me one of those" is the entire instruction.' },
+  { c: 'agent', n: 'House style as a skill', b: 'The palette, the gradient outline, the bouncy easing, the version-pill, the PWA rules. All of it currently lives in a long markdown file that gets partly read. As a skill with a working stylesheet and a template beside it, a new app starts already looking right.' },
+  { c: 'agent', n: 'A skill that checks against a policy', b: 'Give it the standard, point it at a folder, get back what fails. Lawyers did this with contracts first. Yours could be: every place page has a hero, every app has an icon set, every book chapter has a hook, every site has the right CTA logic. The rule stops being something you remember.' },
+  { c: 'agent', n: 'Publish one skill publicly', b: 'You have written a lot of genuinely good ones. Pick the most transferable — the image-sourcing waterfall, or the town-sweep method — strip out anything private, and put it out with a readme. Costs an hour, and it is the cheapest reputation you will ever build.' },
+  { c: 'agent', n: 'A skill that makes the picture', b: 'Somebody built a skill that generates a GIF to a size limit, with the validation baked in so it never returns something unusable. That is the pattern worth copying: the skill contains the checks, so the output is right rather than nearly right. Aim yours at app icons, or social cards, or a place-page hero.' },
+
+  // ---------- stack ----------
+  { c: 'stack', n: 'The house ChatGPT', b: 'Ollama underneath, open-webui in front, on the Mac mini, with accounts for the family. The whole household gets a chat assistant that never sends a word outside the house, and the children can use it without you thinking about it. An evening to stand up, and it changes what is normal at home.' },
+  { c: 'stack', n: 'Speech in, intent, speech out — no cloud', b: 'Whisper transcribes, a small intent layer decides, Piper or Kokoro answers. That three-piece stack is what the self-hosting crowd settled on this year because it is fast and it never phones anywhere. Build it once as a service and every future voice project plugs into it.' },
+  { c: 'stack', n: 'Agentic operations, on-premise', b: 'The 2026 home-lab idea in one line: the automation reasons about your house, and the reasoning happens in your house. No hybrid cloud, no sending logs to a service. Take one thing you currently do with a hosted tool and bring it home; write down honestly what got worse.' },
+  { c: 'stack', n: 'Local model on your own power data', b: 'Feed the electricity readings, the disk temperatures and the process list into a small model and let it recommend rather than alert. "Move this job to overnight." "That drive is heading for failure." You build the collector and the prompt; the value is in what it notices that no threshold would.' },
+
+  // ---------- app ----------
+  { c: 'app', n: 'Fortunes your family wrote', b: 'The screen version of the shake-for-a-fortune build, and a good first project with a child: they write the lines, you build the shake gesture and the once-a-day rule. Then it goes on their home screen and they see their own words come back at them.' },
+  { c: 'app', n: 'The room-by-room house map', b: 'Every device, every sensor, every app, laid out as the actual floor plan rather than a list. Tap a room and see what is in it and what it is doing. Once you have more than about twenty things running, a list stops working and a map starts.' },
+  { c: 'app', n: 'What the robot did today', b: 'If anything in the house moves on its own — arm, rover, camera, watering rig — it needs a page. What it did, what it saw, what it failed at, with photos. Otherwise it is a mystery box and you stop trusting it.' },
+  { c: 'app', n: 'Teach-and-repeat recorder', b: 'A phone page that records a sequence of physical actions as you narrate them, so the arm or the rover can replay it. The interface is the project: start, mark a step, undo the last one, save with a name. Everything else already exists.' },
+
+  // ---------- life ----------
+  { c: 'life', n: 'What in the house moves, and should something?', b: 'Walk around and list the things that need a hand to move — a bin, a gate, a curtain, a tray of parts. Most should stay manual. One or two are genuinely worth a motor, and they are usually the ones you resent rather than the ones that look impressive.' },
+  { c: 'life', n: 'What do you explain to Claude every single time?', b: 'That thing is a skill you have not written yet. Keep a note for a week of every rule you repeat, and at the end you will have three or four folders worth writing and the exact words to put in them.' },
+  { c: 'life', n: 'Which room has no voice in it?', b: 'The kitchen, the shed, the car, the child\'s room. At about £15 a room for a microphone board, the question is no longer cost — it is which room you actually want to be able to talk to, and what it should be allowed to do.' },
 ];
 
 // Prompt builder — what gets opened in a fresh Claude chat when "Dig deeper" is tapped.
@@ -396,6 +459,7 @@ Walk me through how this applies to my setup — Mac mini always-on, BOOX as pri
     app:       'app pattern',
     hardware:  'hardware project',
     agent:     'agent-engineering build',
+    robot:     'robotics build',
     ai:        'AI-era workflow'
   };
   const label = labelMap[spark.c] || 'pattern';

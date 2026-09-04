@@ -1,10 +1,11 @@
-const CACHE = 'ideas-v8';
+const CACHE = 'ideas-v9';
 const ASSETS = [
   './',
   './index.html',
   './idea.html',
   './add.html',
   './spark.html',
+  './category.html',
   './manifest.json',
   './icon-192.png',
   './icon-512.png',
@@ -12,7 +13,9 @@ const ASSETS = [
   './assets/style.css',
   './assets/app.js',
   './assets/ideas-data.js',
-  './assets/sparks-data.js'
+  './assets/sparks-data.js',
+  './assets/cats-data.js',
+  './assets/shelf.js'
 ];
 
 self.addEventListener('install', (e) => {

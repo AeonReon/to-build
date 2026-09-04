@@ -771,3 +771,175 @@ button.danger::before, .btn.danger::before { background: linear-gradient(135deg,
 @supports (padding: env(safe-area-inset-top)) {
   .launcher-hero { padding-top: calc(1.8em + env(safe-area-inset-top)); }
 }
+
+/* ============================================================
+   THE SHELF SHELL  (v8)
+   Lifted from Classical Mind so Ideas reads the same way: an app
+   bar, a "For today" band with a photo down the side of each row,
+   then one photo shelf per category instead of one long wall of
+   tiles on the front page.
+   ============================================================ */
+
+/* ---- App bar ---- */
+.appbar {
+  background: var(--grad-sky); box-shadow: 0 2px 10px rgba(31, 90, 140, .22);
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 40;
+}
+.appbar .row {
+  display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
+  height: 56px; max-width: 820px; margin: 0 auto; padding: 0 14px;
+}
+.appbar .abico { width: 34px; height: 34px; border-radius: 9px; justify-self: start; box-shadow: 0 2px 6px rgba(0,0,0,.22); display: block; }
+.appbar .brand {
+  justify-self: center; font-weight: 900; font-size: 21px; letter-spacing: -.025em;
+  white-space: nowrap; color: #fff; text-shadow: 0 1px 2px rgba(18,58,96,.4);
+}
+@media (max-width: 360px) { .appbar .brand { font-size: 19px; } }
+.appbar .hbtn {
+  justify-self: end; display: inline-flex; align-items: center; gap: 6px; color: #fff;
+  background: rgba(255,255,255,.20); border: 0; cursor: pointer;
+  font: 700 12.5px/1 var(--sans); padding: 9px 13px; border-radius: var(--radius-pill);
+  text-decoration: none;
+}
+.appbar .hbtn svg { width: 15px; height: 15px; }
+@media (max-width: 440px) { .appbar .hbtn span { display: none; } }
+
+/* ---- Compact hero ---- */
+.cm-hero { margin: 6px 0 18px; }
+.cm-hero h1 { font-weight: 800; font-size: clamp(26px, 6.5vw, 36px); letter-spacing: -.03em; line-height: 1.05; margin: 0; }
+.cm-hero p { margin: .5em 0 0; font-size: 16px; line-height: 1.5; color: var(--ink-mute); max-width: 52ch; }
+
+/* ---- "New here?" welcome ---- */
+.welcome { margin: 0 0 20px; border-radius: 15px; overflow: hidden; background: linear-gradient(135deg, #FFF6E2, #FDEFCF); border: 1.5px solid #F0DCA8; }
+.welcome[open] { background: var(--paper-card); border-color: var(--rule); box-shadow: var(--shadow-sm); }
+.welcome-sum { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 10px; padding: 12px 14px; color: #8A6410; }
+.welcome-sum::-webkit-details-marker { display: none; }
+.welcome[open] .welcome-sum { color: var(--ink); border-bottom: 1px solid var(--rule); }
+.wl-badge { font-size: 19px; line-height: 1; }
+.wl-sumtxt { flex: 1; font: 600 14px/1.35 var(--sans); } .wl-sumtxt b { font-weight: 800; }
+.wl-chev { transition: transform .2s; opacity: .6; } .welcome[open] .wl-chev { transform: rotate(180deg); }
+.welcome-body { padding: 14px 15px 16px; font-size: 15px; line-height: 1.55; color: var(--ink-soft); }
+.welcome-body p { margin: 0 0 .7em; } .welcome-body p:last-child { margin-bottom: 0; }
+.welcome-body b { color: var(--ink); }
+
+/* ---- "For today" band: photo down the RIGHT ---- */
+.today-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 0 0 12px; }
+.daily-lead { font-weight: 800; font-size: 1.22em; letter-spacing: -.02em; }
+.today-shuffle {
+  cursor: pointer; font: 800 .8em var(--sans); color: var(--sun-deep); background: var(--paper-card);
+  border: 1.5px solid var(--rule); border-radius: var(--radius-pill); display: inline-flex; gap: .45em;
+  align-items: center; padding: .5em .95em; box-shadow: var(--shadow-sm);
+  transition: transform .15s ease, border-color .15s ease;
+}
+.today-shuffle:hover { border-color: var(--sun-hot); } .today-shuffle:active { transform: scale(.95); }
+.today-list { display: flex; flex-direction: column; gap: .7em; margin-bottom: 30px; }
+.today-bar {
+  position: relative; display: flex; align-items: stretch; width: 100%; border: none; padding: 0;
+  cursor: pointer; text-align: left; background: var(--paper-card); border-radius: var(--radius-md);
+  overflow: hidden; box-shadow: var(--shadow-md); font-family: var(--sans); color: inherit;
+  transition: transform .15s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow .15s ease;
+}
+.today-bar::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; z-index: 3; background: linear-gradient(180deg, var(--c), var(--cd)); }
+.today-bar:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+.today-bar:active { transform: scale(.99); }
+.tb-text { flex: 1; min-width: 0; padding: .85em 1em .85em 1.2em; display: flex; flex-direction: column; justify-content: center; gap: .22em; }
+.tb-kicker { font: 800 .64rem/1 var(--sans); letter-spacing: .09em; text-transform: uppercase; color: var(--cd); }
+.tb-title { font-weight: 800; font-size: 1.05em; letter-spacing: -.01em; line-height: 1.18; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tb-teaser { font-size: .88em; color: var(--ink-mute); line-height: 1.34; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.tb-photo { flex: none; width: 92px; align-self: stretch; position: relative; overflow: hidden; background: linear-gradient(150deg, var(--c), var(--cd)); }
+.tb-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+.tb-glyph { position: absolute; inset: 0; display: grid; place-items: center; z-index: 0; color: #fff; }
+.tb-glyph svg { width: 30px; height: 30px; }
+
+/* ---- Photo shelves: photo down the LEFT ---- */
+.rtile-list { display: flex; flex-direction: column; gap: .7em; }
+.rtile {
+  position: relative; display: flex; align-items: stretch; width: 100%;
+  text-decoration: none; color: inherit; background: var(--paper-card);
+  border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-md);
+  transition: transform .15s cubic-bezier(.34, 1.56, .64, 1), box-shadow .15s ease;
+}
+.rtile::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; z-index: 3; background: linear-gradient(180deg, var(--c), var(--cd)); }
+.rtile:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+.rtile:active { transform: scale(.99); }
+.rtile-photo { flex: none; width: 108px; align-self: stretch; position: relative; overflow: hidden; background: linear-gradient(150deg, var(--c), var(--cd)); }
+.rtile-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+.rtile-photo::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,0,0,0) 60%, rgba(0,0,0,.12)); z-index: 2; }
+.rtile-ic {
+  position: absolute; left: 8px; bottom: 8px; z-index: 3; width: 32px; height: 32px;
+  border-radius: 9px; background: linear-gradient(150deg, var(--c), var(--cd));
+  display: grid; place-items: center; box-shadow: 0 2px 6px rgba(0,0,0,.28); border: 2px solid var(--paper-card);
+}
+.rtile-ic svg { width: 19px; height: 19px; color: #fff; }
+.rtile-body { flex: 1; min-width: 0; padding: 13px 12px 13px 16px; display: flex; flex-direction: column; justify-content: center; gap: .18em; }
+.rtile-name { font-weight: 800; font-size: 1.06em; letter-spacing: -.01em; line-height: 1.15; }
+.rtile-tagline { font-size: .88em; line-height: 1.35; color: var(--ink-mute); }
+.rtile-count { margin-top: .3em; font-size: .72rem; font-weight: 800; letter-spacing: .02em; text-transform: uppercase; color: var(--cd); }
+.rtile-chev { flex: none; align-self: center; padding-right: 14px; color: var(--ink-mute); font-size: 1.2em; opacity: .6; }
+
+/* ---- Category page ---- */
+.cat-hero { position: relative; border-radius: var(--radius-lg); overflow: hidden; margin: 6px 0 20px; background: linear-gradient(150deg, var(--c), var(--cd)); box-shadow: var(--shadow-md); }
+.cat-hero img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+.cat-hero::after { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(160deg, rgba(0,0,0,.30), rgba(0,0,0,.62)); }
+.cat-hero-body { position: relative; z-index: 2; padding: 26px 20px 22px; color: #fff; }
+.cat-hero-kicker { font: 800 .68rem/1 var(--sans); letter-spacing: .1em; text-transform: uppercase; opacity: .9; }
+.cat-hero-name { margin: .45em 0 0; font-weight: 800; font-size: clamp(24px, 6vw, 32px); letter-spacing: -.02em; line-height: 1.1; }
+.cat-hero-sub { margin: .5em 0 0; font-size: 15px; line-height: 1.45; opacity: .93; max-width: 46ch; }
+
+.card-list { display: flex; flex-direction: column; gap: .7em; }
+.scard {
+  position: relative; width: 100%; text-align: left; border: none; cursor: pointer;
+  background: var(--paper-card); border-radius: var(--radius-md); box-shadow: var(--shadow-md);
+  padding: 15px 16px 15px 20px; font-family: var(--sans); color: inherit;
+  transition: transform .15s cubic-bezier(.34, 1.56, .64, 1), box-shadow .15s ease;
+  text-decoration: none; display: block;
+}
+.scard::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; border-radius: var(--radius-md) 0 0 var(--radius-md); background: linear-gradient(180deg, var(--c), var(--cd)); }
+.scard:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+.scard:active { transform: scale(.99); }
+.scard-name { font-weight: 800; font-size: 1.04em; letter-spacing: -.01em; line-height: 1.2; }
+.scard-body { margin-top: .3em; font-size: .92em; line-height: 1.45; color: var(--ink-mute); }
+.scard-saved { margin-top: .5em; display: inline-block; font: 800 .7rem var(--sans); letter-spacing: .04em; text-transform: uppercase; color: var(--cd); }
+
+/* ---- Detail modal ---- */
+.cm-modal-overlay {
+  position: fixed; inset: 0; z-index: 80; background: rgba(40, 30, 20, .55);
+  backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center;
+  padding: max(36px, calc(env(safe-area-inset-top) + 20px)) 22px max(36px, calc(env(safe-area-inset-bottom) + 20px));
+  opacity: 0; pointer-events: none; transition: opacity .2s ease;
+}
+.cm-modal-overlay.open { opacity: 1; pointer-events: auto; }
+.cm-modal {
+  position: relative; width: 100%; max-width: 440px; max-height: 100%; overflow-y: auto;
+  -webkit-overflow-scrolling: touch; background: var(--paper-card); border-radius: var(--radius-lg);
+  box-shadow: 0 24px 64px rgba(0,0,0,.38); transform: scale(.9); opacity: 0;
+  transition: transform .26s cubic-bezier(0.34, 1.56, 0.64, 1), opacity .18s ease;
+}
+.cm-modal-overlay.open .cm-modal { transform: scale(1); opacity: 1; }
+.cm-mhead { padding: 22px 22px 18px; color: #fff; background: linear-gradient(140deg, var(--c), var(--cd)); }
+.cm-mkicker { font: 800 11px/1 var(--sans); letter-spacing: .1em; text-transform: uppercase; opacity: .95; }
+.cm-mtitle { margin: .5em 0 0; font-weight: 800; font-size: clamp(21px, 5.5vw, 27px); letter-spacing: -.02em; line-height: 1.14; }
+.cm-mbody { padding: 20px 22px 24px; color: var(--ink-soft); font-size: 16px; line-height: 1.6; }
+.cm-mbody p { margin: 0 0 .9em; } .cm-mbody p:last-child { margin-bottom: 0; }
+.cm-mactions { display: flex; flex-wrap: wrap; gap: .55em; padding: 0 22px 24px; }
+.cm-mclose { position: absolute; top: 14px; right: 14px; z-index: 2; width: 34px; height: 34px; border-radius: 50%; border: 0; cursor: pointer; background: rgba(255,255,255,.22); color: #fff; font-size: 20px; line-height: 34px; text-align: center; }
+
+/* ---- Shelf section spacing ---- */
+.shelf { margin: 0 0 28px; }
+.shelf-head { margin: 0 0 10px; }
+.shelf-title { font-weight: 800; font-size: 1.18em; letter-spacing: -.02em; margin: 0; }
+.shelf-sub { margin: .25em 0 0; font-size: .93em; line-height: 1.4; color: var(--ink-mute); }
+
+/* The global `button, .btn` rule above wraps every button in a gradient-outline
+   pill. The shelf cards are buttons for keyboard and screen-reader reasons, not
+   because they should look like pills — so they opt out of the mask (which would
+   otherwise eat their coloured left edge) and the shuffle and close buttons drop
+   the ring entirely. */
+.today-bar::before,
+.scard::before { -webkit-mask: none; mask: none; padding: 0; }
+.today-shuffle::before,
+.cm-mclose::before { content: none; }
+.today-bar:active,
+.scard:active { transform: scale(.99); }
+.cm-mclose { padding: 0; }

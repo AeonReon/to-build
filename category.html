@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#FAF6EC">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Ideas">
+  <title>Ideas — shelf</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="stylesheet" href="assets/style.css?v8">
+</head>
+<body class="launcher">
+
+  <div class="appbar">
+    <div class="row">
+      <a href="index.html" style="justify-self:start;line-height:0"><img src="icon-192.png" alt="Ideas" class="abico"></a>
+      <span class="brand" id="brand">Ideas</span>
+      <a class="hbtn" href="index.html" title="All shelves">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        <span>Shelves</span>
+      </a>
+    </div>
+  </div>
+
+  <main class="launcher-main">
+    <div class="cat-hero" id="hero"></div>
+    <div class="card-list" id="list"></div>
+  </main>
+
+  <footer class="launcher-footer" id="foot"></footer>
+
+  <div class="cm-modal-overlay" id="overlay" hidden>
+    <div class="cm-modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+      <button class="cm-mclose" id="mClose" aria-label="Close">&times;</button>
+      <div class="cm-mhead">
+        <div class="cm-mkicker" id="mKicker"></div>
+        <div class="cm-mtitle" id="mTitle"></div>
+      </div>
+      <div class="cm-mbody" id="mBody"></div>
+      <div class="cm-mactions" id="mActions"></div>
+    </div>
+  </div>
+
+  <script src="assets/ideas-data.js"></script>
+  <script src="assets/sparks-data.js"></script>
+  <script src="assets/cats-data.js"></script>
+  <script src="assets/app.js"></script>
+  <script src="assets/shelf.js?v8"></script>
+  <script>
+    const id = new URLSearchParams(location.search).get('c') || '';
+
+    // "Your brain-dumps" is a shelf too, it just draws from localStorage
+    // rather than from either seed file.
+    const YOURS = {
+      id: '__yours', kind: 'idea', name: 'Your brain-dumps',
+      sub: 'Captured straight into the app on this device. Yours to edit or delete.',
+      c: '#FF5E8E', cd: '#9D174D', icon: 'plus'
+    };
+
+    const shelf = id === '__yours' ? YOURS : window.shelfById(id);
+
+    if (!shelf) {
+      document.getElementById('hero').outerHTML =
+        '<div class="empty">That shelf does not exist. <a href="index.html">Back to the shelves</a>.</div>';
+    } else {
+      document.title = 'Ideas — ' + shelf.name;
+      document.getElementById('brand').textContent = shelf.name;
+
+      const items = shelf.id === '__yours' ? TB.loadUserIdeas() : window.shelfItems(shelf);
+      const noun = shelf.kind === 'idea' ? 'idea' : 'spark';
+
+      const hero = document.getElementById('hero');
+      hero.style.setProperty('--c', shelf.c);
+      hero.style.setProperty('--cd', shelf.cd);
+      hero.innerHTML = `
+        ${shelf.id === '__yours' ? '' : `<img src="assets/cats/${shelf.id}.jpg" alt="" onerror="this.remove()">`}
+        <div class="cat-hero-body">
+          <div class="cat-hero-kicker">${items.length} ${noun}${items.length === 1 ? '' : 's'}</div>
+          <h1 class="cat-hero-name">${TB.escapeHtml(shelf.name)}</h1>
+          <p class="cat-hero-sub">${TB.escapeHtml(shelf.sub)}</p>
+        </div>`;
+
+      const listEl = document.getElementById('list');
+      if (!items.length) {
+        listEl.innerHTML = '<div class="empty">Nothing on this shelf yet.</div>';
+      } else if (shelf.kind === 'idea') {
+        listEl.innerHTML = items.map(i => `
+          <a class="scard" href="idea.html?id=${encodeURIComponent(i.id)}" style="--c:${i.color || shelf.c};--cd:${i.colorDeep || shelf.cd};">
+            <div class="scard-name">${TB.escapeHtml(i.name)}</div>
+            <div class="scard-body">${TB.escapeHtml(i.hook || '')}</div>
+            ${i.status ? `<div class="scard-saved">${TB.escapeHtml(i.status)}</div>` : ''}
+          </a>`).join('');
+      } else {
+        listEl.innerHTML = items.map(s => `
+          <button type="button" class="scard" style="--c:${shelf.c};--cd:${shelf.cd};"
+                  data-spark="${TB.escapeHtml(s.n)}" onclick="Shelf.openFromEl(this)">
+            <div class="scard-name">${TB.escapeHtml(s.n)}</div>
+            <div class="scard-body">${TB.escapeHtml(s.b)}</div>
+            ${TB.isSparkSaved(s.n) ? '<div class="scard-saved">In your pool ✓</div>' : ''}
+          </button>`).join('');
+      }
+
+      document.getElementById('foot').textContent = shelf.kind === 'idea'
+        ? 'Tap one to read the whole riff.'
+        : 'Tap a card to read it, then dig into it in a chat or keep it for later.';
+    }
+  </script>
+</body>
+</html>

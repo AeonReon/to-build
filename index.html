@@ -7,47 +7,78 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Ideas">
-  <title>Ideas — The pool</title>
+  <title>Ideas — something to build</title>
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
-  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="assets/style.css?v8">
 </head>
 <body class="launcher">
 
-  <header class="launcher-hero">
-    <div class="hero-wrap">
-      <div class="hero-brand">
-        <img src="icon-192.png" alt="" class="brand-icon" onerror="this.style.display='none'">
-        <div>
-          <h1>Ideas</h1>
-          <p class="hero-lede">The pool of project ideas waiting for a quiet day. Pull one out. Brain-dump a new one. Spark a fresh one.</p>
-        </div>
-      </div>
-      <div class="count-pill" id="count-pill">… ideas</div>
+  <div class="appbar">
+    <div class="row">
+      <img src="icon-192.png" alt="Ideas" class="abico">
+      <span class="brand">Ideas</span>
+      <a class="hbtn" href="add.html" title="Brain-dump a new idea">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        <span>Add</span>
+      </a>
     </div>
-  </header>
+  </div>
 
   <main class="launcher-main">
 
-    <div class="action-row">
-      <a href="add.html" class="action-tile" style="--c:#FFD64A;--cd:#C97D2A;">
-        <span class="action-icon"><svg viewBox="0 0 64 64" class="tile-icon" id="add-icon"></svg></span>
-        <span class="action-body">
-          <span class="action-name">Brain-dump a new idea</span>
-          <span class="action-tagline">Talk into the textarea. iOS dictation works.</span>
-        </span>
-      </a>
-      <a href="spark.html" class="action-tile" style="--c:#FF5E8E;--cd:#7c3aed;">
-        <span class="action-icon"><svg viewBox="0 0 64 64" class="tile-icon" id="spark-icon"></svg></span>
-        <span class="action-body">
-          <span class="action-name">Spark a new idea</span>
-          <span class="action-tagline">Pull a fresh pattern from the wider world.</span>
-        </span>
-      </a>
+    <div class="cm-hero">
+      <h1>Something to build.</h1>
+      <p id="hero-lede">The pool, for the days when there is spare capacity and no idea what to point it at. Four picked for today, then the whole shelf below.</p>
     </div>
 
-    <div id="sections"></div>
+    <details class="welcome" id="welcomeBox">
+      <summary class="welcome-sum">
+        <span class="wl-badge" aria-hidden="true">💡</span>
+        <span class="wl-sumtxt"><b>New here?</b> How this pool is meant to be used</span>
+        <span class="wl-chev" aria-hidden="true">▾</span>
+      </summary>
+      <div class="welcome-body">
+        <p><b>Four for today</b> is the quick way in. Tap one, read it, and if it is alive either dig into it in a chat or leave it. Shuffle if none of them land.</p>
+        <p><b>The shelves</b> below are the whole pool sorted by kind, so you can see which things sit next to each other. The long riffs at the top are the ones already thought through in detail. The rest are single cards — a pattern, enough to recognise, with a chat prompt ready.</p>
+        <p><b>Most of these will never be built.</b> That is the point. The pool exists so that a free evening never starts from a blank page.</p>
+      </div>
+    </details>
+
+    <section class="daily-feed" aria-label="For today">
+      <div class="today-head">
+        <div class="daily-lead">For today</div>
+        <button class="today-shuffle" id="todayShuffle" type="button">Shuffle <span aria-hidden="true">↻</span></button>
+      </div>
+      <div class="today-list" id="todayList"></div>
+    </section>
+
+    <div id="shelves"></div>
+
+    <section class="shelf">
+      <div class="shelf-head">
+        <h2 class="shelf-title">Tools</h2>
+      </div>
+      <div class="rtile-list">
+        <a href="spark.html" class="rtile" style="--c:#FF5E8E;--cd:#7C3AED;">
+          <span class="rtile-photo"><span class="rtile-ic" id="ic-spark"></span></span>
+          <span class="rtile-body">
+            <span class="rtile-name">Spark roulette</span>
+            <span class="rtile-tagline">One card at a time from the whole bank, at random. Re-roll until something feels alive.</span>
+          </span>
+          <span class="rtile-chev" aria-hidden="true">→</span>
+        </a>
+        <a href="add.html" class="rtile" style="--c:#FFD64A;--cd:#C97D2A;">
+          <span class="rtile-photo"><span class="rtile-ic" id="ic-add"></span></span>
+          <span class="rtile-body">
+            <span class="rtile-name">Brain-dump a new idea</span>
+            <span class="rtile-tagline">Talk into the box. iOS dictation works. Stays on this device until you promote it.</span>
+          </span>
+          <span class="rtile-chev" aria-hidden="true">→</span>
+        </a>
+      </div>
+    </section>
 
   </main>
 
@@ -55,69 +86,64 @@
     Capture the seed before it&rsquo;s lost. Most won&rsquo;t get built. The point is the pool.
   </footer>
 
+  <div class="cm-modal-overlay" id="overlay" hidden>
+    <div class="cm-modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+      <button class="cm-mclose" id="mClose" aria-label="Close">&times;</button>
+      <div class="cm-mhead">
+        <div class="cm-mkicker" id="mKicker"></div>
+        <div class="cm-mtitle" id="mTitle"></div>
+      </div>
+      <div class="cm-mbody" id="mBody"></div>
+      <div class="cm-mactions" id="mActions"></div>
+    </div>
+  </div>
+
   <script src="assets/ideas-data.js"></script>
+  <script src="assets/sparks-data.js"></script>
+  <script src="assets/cats-data.js"></script>
   <script src="assets/app.js"></script>
+  <script src="assets/shelf.js?v8"></script>
   <script>
-    // Inject action-tile icons
-    document.getElementById('add-icon').innerHTML = TB.ICONS.plus;
-    document.getElementById('spark-icon').innerHTML = TB.ICONS.spark;
+    document.getElementById('ic-spark').innerHTML = `<svg viewBox="0 0 64 64">${TB.ICONS.spark}</svg>`;
+    document.getElementById('ic-add').innerHTML   = `<svg viewBox="0 0 64 64">${TB.ICONS.plus}</svg>`;
 
-    // Group ideas by category
-    const user = TB.loadUserIdeas();
-    const hidden = new Set(TB.loadHiddenSeeds());
-    const seed = (window.IDEAS || []).filter(i => !hidden.has(i.id));
-    const all = [...user, ...seed];
-    document.getElementById('count-pill').textContent = `${all.length} ideas in the pool`;
+    // ---------- The pool, counted ----------
+    const userIdeas = TB.loadUserIdeas();
+    const sparkCount = (window.SPARKS || []).length;
+    const ideaCount = (window.IDEAS || []).length + userIdeas.length;
+    document.getElementById('hero-lede').textContent =
+      `${ideaCount + sparkCount} things in the pool, for the days when there is spare capacity and no idea what to point it at. Four picked for today, then the whole shelf below.`;
 
-    const userTiles = user;
-    const grouped = {};
-    for (const cat of window.CATEGORIES) grouped[cat.id] = [];
-    for (const idea of seed) {
-      if (grouped[idea.category]) grouped[idea.category].push(idea);
+    // ---------- For today ----------
+    // Deterministic per day so the four are the same all day, and the
+    // shuffle button walks forward through the deck rather than
+    // re-randomising into something you already saw.
+    let todayOffset = 0;
+    function paintToday() {
+      document.getElementById('todayList').innerHTML =
+        Shelf.pickForToday(todayOffset).map(Shelf.todayBarHTML).join('');
     }
+    document.getElementById('todayShuffle').addEventListener('click', () => {
+      todayOffset += 4;
+      paintToday();
+    });
+    paintToday();
 
-    function renderTile(idea) {
-      const isUser = !window.IDEAS.find(s => s.id === idea.id);
-      return `
-        <a href="idea.html?id=${encodeURIComponent(idea.id)}" class="tile" style="--c:${idea.color};--cd:${idea.colorDeep};">
-          ${isUser ? '<span class="tile-badge">Yours</span>' : ''}
-          <div class="tile-icon-wrap">${TB.tileIconSVG(idea.icon)}</div>
-          <div class="tile-body">
-            <div class="tile-name">${TB.escapeHtml(idea.name)}</div>
-            <div class="tile-tagline">${TB.escapeHtml(idea.hook)}</div>
-            ${idea.status ? `<div class="tile-status">${TB.escapeHtml(idea.status)}</div>` : ''}
-          </div>
-        </a>`;
-    }
-
-    const sectionsEl = document.getElementById('sections');
+    // ---------- Shelves ----------
     let html = '';
-
-    if (userTiles.length) {
-      html += `
-        <section class="tile-section">
-          <h2 class="tile-section-title">Your brain-dumps</h2>
-          <p class="tile-section-sub">Captured straight into the app. Local to this device.</p>
-          <div class="tile-grid">${userTiles.map(renderTile).join('')}</div>
-        </section>`;
+    if (userIdeas.length) {
+      html += Shelf.sectionHTML({
+        id: '__yours', name: 'Your brain-dumps',
+        sub: 'Captured straight into the app on this device.',
+        c: '#FF5E8E', cd: '#9D174D', icon: 'plus'
+      }, userIdeas.length, 'yours');
     }
-
-    for (const cat of window.CATEGORIES) {
-      const list = grouped[cat.id];
-      if (!list.length) continue;
-      html += `
-        <section class="tile-section">
-          <h2 class="tile-section-title">${TB.escapeHtml(cat.name)}</h2>
-          <p class="tile-section-sub">${TB.escapeHtml(cat.sub)}</p>
-          <div class="tile-grid">${list.map(renderTile).join('')}</div>
-        </section>`;
+    for (const shelf of window.SHELVES) {
+      const n = window.shelfItems(shelf).length;
+      if (!n) continue;
+      html += Shelf.sectionHTML(shelf, n);
     }
-
-    if (!all.length) {
-      html = `<div class="empty">No ideas yet. Tap <strong>Brain-dump a new idea</strong> or <strong>Spark a new idea</strong> to start the pool.</div>`;
-    }
-
-    sectionsEl.innerHTML = html;
+    document.getElementById('shelves').innerHTML = html;
   </script>
 </body>
 </html>

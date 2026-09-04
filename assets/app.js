@@ -1,4 +1,4 @@
-const APP_VERSION = 'v7';
+const APP_VERSION = 'v8';
 const USER_IDEAS_KEY = 'tobuild.user-ideas';
 const HIDDEN_SEEDS_KEY = 'tobuild.hidden-seeds';
 const SAVED_SPARKS_KEY = 'tobuild.saved-sparks';
@@ -239,6 +239,9 @@ function toast(msg) {
 function renderHomeLink() {
   const here = (location.pathname.split('/').pop() || 'index.html');
   if (here === 'index.html' || here === '') return;
+  // Pages that carry the app bar already have a way home on the logo, and the
+  // floating pill would sit on top of it.
+  if (document.querySelector('.appbar')) return;
   document.body.insertAdjacentHTML('afterbegin', '<a href="index.html" class="home-link">← Ideas</a>');
 }
 function renderVersionPill() {
