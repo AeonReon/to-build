@@ -1,4 +1,4 @@
-const APP_VERSION = 'v6';
+const APP_VERSION = 'v7';
 const USER_IDEAS_KEY = 'tobuild.user-ideas';
 const HIDDEN_SEEDS_KEY = 'tobuild.hidden-seeds';
 const SAVED_SPARKS_KEY = 'tobuild.saved-sparks';

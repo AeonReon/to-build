@@ -218,6 +218,52 @@ window.IDEAS = [
       "Decision deferred — pull this back when the user wants a \"ship something to the community\" wave."
     ].join('\n\n')
   }
+,
+
+  {
+    id: 'night-shift-agent-layer',
+    name: 'The night shift — an agent layer that runs while you sleep',
+    hook: 'Scheduled cloud agents that keep running with the Mac mini off, an approval queue on the phone, and a permission layer so none of it can hurt you.',
+    category: 'software',
+    status: 'Multi-wave',
+    captured: '2026-09-04',
+    color: '#7c3aed',
+    colorDeep: '#5b21b6',
+    icon: 'robot',
+    body: [
+      "What changed: scheduled routines now run on Anthropic's own machines rather than yours. Everything automated in this workspace today is a launchd plist or a PM2 process on the Mac mini — which means the mini is a single point of failure for the Days Out hourly publish, the image jobs, the token watches, the heartbeats. A routine is a written prompt on a cron, running in the cloud, that adapts when a page changes shape instead of failing quietly at 3am. That is a different class of thing from a bash script.",
+      "Wave 1 — Move one job and prove it. Pick the highest-value cron on the mini that does not need local disk, local models or the SSD. The Cloudflare token expiry watch is a good first one: no data dependency, clear pass or fail, and it already posts to the Feed. Write it as a routine, run both versions in parallel for a week, compare. The lesson from that week is what shapes everything after it.",
+      "Wave 2 — The approval queue. The reason most automation stays timid is that the risky half needs a human. So build the queue as a product rather than a pause: a phone PWA where each item is one decision with the actual evidence attached — the photo, the price, the sentence, the place about to be removed. Swipe approves, swipe rejects, and the rejection reason is stored. Those stored reasons become the rubric that lets the next version decide for itself. Push notification carries the decision so most items never need the app opened at all.",
+      "Wave 3 — Capability tokens and the audit log. Before anything runs unsupervised, each agent gets a token naming exactly which tools it may call, for how long, at what rate. The scraper never gets publish rights. The publisher never gets a shell. Every call lands in an append-only log with the run id, and there is one page where you can read what happened overnight. This is the wave that makes the rest safe rather than frightening — and it is the layer the whole workspace has been missing, because right now any session has everything.",
+      "Wave 4 — The overnight digest and the cost ledger. One page every morning, written for a person with a coffee: what ran, what it changed, what it cost, what it refused to do, what is waiting on you. Plus a small service every agent posts to — run id, purpose, tokens, model, outcome — so \"was that worth it\" becomes a number rather than a feeling. Pipelines that quietly burn money get found in week one.",
+      "Wave 5 — Hooks as hard guardrails. Underneath all of it, deterministic rules that do not depend on the model behaving: no force-push to main, no write to places.json without a backup first, no rm outside a scratch directory, no outbound send without a token that says so. Thirty lines of shell that cannot be talked out of it.",
+      "Honest watch-outs: routines are still a research preview, so treat the first year as belt-and-braces — keep the local version until the cloud one has been right for a month. Anything needing the SSD, LM Studio, Kokoro or a logged-in browser profile stays on the mini and always will; the split is not a migration, it is a sorting. And prompt injection is a real risk the moment an unattended agent reads pages written by strangers, which is exactly what the scrapers do — the capability tokens in Wave 3 are the answer to that, not a nice-to-have.",
+      "Sequencing: Wave 1 and Wave 2 are each one session. Wave 3 is the gate before anything runs without you watching. Waves 4 and 5 stack on afterwards and each stands alone."
+    ].join('\n\n')
+  },
+
+  {
+    id: 'fan-out-factory',
+    name: 'The fan-out factory — one instruction, two thousand places',
+    hook: 'Dynamic workflows plus written rubrics turn the one-category-at-a-time grind into overnight runs you grade instead of do.',
+    category: 'software',
+    status: 'Multi-wave',
+    captured: '2026-09-04',
+    color: '#0891b2',
+    colorDeep: '#155e75',
+    icon: 'satellite',
+    body: [
+      "What changed: a lead agent can now write a script that fans out tens or hundreds of subagents in parallel, each with its own context window, and subagents can spawn subagents five levels deep. Alongside it, a grader can score every result against a rubric and send the failures back to be redone until they pass. That combination is the thing that was missing. The Days Out work has always been shaped by a hard constraint — one category at a time, one town at a time, because a single session can only hold so much and quality collapses when it is rushed. That constraint is now about writing the standard down rather than about how much fits in one head.",
+      "The realisation: the skills in this workspace already contain the standards. The town sweep skill knows what a finished town looks like. The images skill knows what a trustworthy photo proves. The tiering rule knows what makes an event major. Those are rubrics that currently live as instructions to a human-paced session. Written as machine-checkable criteria, they become the grader — and then the work fans out.",
+      "Wave 1 — One audit, no writes. Fan out a read-only subagent per place across the whole dataset, each answering the same short list of questions about one venue: does the pin land on the actual entrance, does the hero image show this place, is the category right, are the opening hours plausible, is there a duplicate elsewhere in the set. Structured output only, nothing changed. What comes back is the first honest, complete picture of the dataset's quality — which is something you have never had, because auditing 2,000 places by hand was never going to happen.",
+      "Wave 2 — The rubric and the grader. Take the audit findings and write the standard properly: what a passing place record contains, what a passing town intro reads like, what a passing hero image proves. Then a second agent scores against it. Test the grader on places you already judged yourself and tune it until it agrees with you. The grader agreeing with your taste is the whole project; everything after it is volume.",
+      "Wave 3 — Fix with approval. Now the fan-out proposes changes rather than just reporting them, and each proposal lands in the approval queue with its evidence. Photo swaps, pin corrections, category moves, duplicate merges. You are grading rather than doing, and the rejections keep sharpening the rubric.",
+      "Wave 4 — Tiering and cost. Not every stage deserves the frontier model. A hundred mechanical checks run on a small fast model; a single judging step per item runs on the expensive one. Build the tiering table once and every later pipeline inherits it.",
+      "Wave 5 — Point it at the other workloads. The same shape covers the rest: a page-per-place writing run graded against the house voice rules, a book chapter pass graded against the style guide, a website QA pass across every built site at once, a whole-corpus read of the town intros in one million-token context instead of chunk by chunk.",
+      "Honest watch-outs: fan-out multiplies mistakes as fast as it multiplies work, so Wave 1 stays read-only and Wave 3 stays gated by approval until the grader has earned trust on a few hundred items. A rubric written vaguely produces confidently wrong grading, which is worse than no grading — spend the time on Wave 2. Cost is real at this scale; the ledger from the night-shift project should exist before the first big run. And the field corrections log stays authoritative over anything an agent concludes from a web page, because ground truth from a real visit outranks a confident model every time.",
+      "Sequencing: Wave 1 is one overnight run and it pays for itself immediately in knowing where you actually stand. Wave 2 is the careful one and deserves a full session. Everything after it is repetition."
+    ].join('\n\n')
+  }
 ];
 
 window.CATEGORIES = [
